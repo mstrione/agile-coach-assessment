@@ -16,6 +16,7 @@ data/preguntas.js   configuración, dimensiones y banco de preguntas
 - Al iniciar se ingresa el nombre del coach y la cantidad de preguntas (10 a 60).
 - El tiempo es de 2 minutos por pregunta, sobre el total del examen; al agotarse se entrega solo.
 - Preguntas de respuesta única y múltiple, elegidas al azar y repartidas parejo entre dimensiones.
+- Tipo de examen: **Mixto** (228 preguntas, conceptuales y situacionales) o **Solo situacionales** (117 preguntas que plantean un caso y piden decidir qué hacer, al menos 13 por dimensión).
 - No hay corrección durante el examen. Al final muestra puntaje, nivel por dimensión (barras y radar) y la revisión de cada pregunta con su explicación.
 - Aprobación: 70%.
 
@@ -38,6 +39,7 @@ Todo se edita en `data/preguntas.js`. Después de `window.ASSESSMENT_DATA =` hay
   "id": "FW01",
   "dimension": "fw",
   "tipo": "unica",
+  "situacional": false,
   "pregunta": "Según la Guía Scrum 2020, ¿cuál es el compromiso asociado al Product Backlog?",
   "opciones": ["El Objetivo del Producto", "La Definición de Hecho", "El Objetivo del Sprint", "La Definición de Preparado"],
   "correctas": ["A"],
@@ -46,6 +48,7 @@ Todo se edita en `data/preguntas.js`. Después de `window.ASSESSMENT_DATA =` hay
 ```
 
 - `tipo`: `"unica"` (exactamente 1 correcta) o `"multiple"` (2 o más; se indica al evaluado cuántas elegir).
+- `situacional`: `true` si la pregunta plantea un caso y pide decidir qué hacer; se incluye en el modo "Solo situacionales". Si se omite, cuenta como `false`.
 - `correctas`: letras según el orden del archivo; las opciones se barajan al mostrarse.
 - `id`: único y estable, porque el historial lo referencia. Para una pregunta nueva, usar un id nuevo.
 - `config` define segundos por pregunta, porcentaje de aprobación y mínimo/máximo de preguntas.

@@ -32,8 +32,9 @@
       if (new Set(a).size !== a.length) return fail('"correctas" tiene letras repetidas.');
       if (p.tipo === 'unica' && a.length !== 1) return fail('una pregunta "unica" debe tener exactamente 1 correcta.');
       if (p.tipo === 'multiple' && a.length < 2) return fail('una pregunta "multiple" debe tener al menos 2 correctas.');
+      if (p.situacional !== undefined && typeof p.situacional !== 'boolean') return fail('"situacional" debe ser true o false.');
       seen.add(p.id);
-      bank.push({ id: p.id, d: p.dimension, t: p.tipo === 'multiple' ? 'm' : 's', q: p.pregunta, o: p.opciones, a, e: p.explicacion || '' });
+      bank.push({ id: p.id, d: p.dimension, t: p.tipo === 'multiple' ? 'm' : 's', q: p.pregunta, o: p.opciones, a, e: p.explicacion || '', sit: p.situacional === true });
     });
     return { cfg: raw.config || {}, dims, bank, errors };
   }
@@ -75,6 +76,8 @@
   const cleanName = n => n.trim().replace(/\s+/g, ' ');
   const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
   const fmtClock = ms => { const s = Math.max(0, Math.ceil(ms / 1000)); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), ss = s % 60; return (h ? h + ':' + String(m).padStart(2, '0') : String(m).padStart(2, '0')) + ':' + String(ss).padStart(2, '0'); };
+  const fmtPerQ = s => (s % 60 === 0 ? (s / 60) + (s === 60 ? ' minuto' : ' minutos') : s + ' segundos');
+  const modeLabel = m => (MODES[m] ? MODES[m].label : MODES.mixto.label);
   const fmtDur = ms => { const m = Math.floor(ms / 60000), s = Math.round(ms % 60000 / 1000); return m + ' min ' + String(s).padStart(2, '0') + ' s'; };
   const fmtDate = ts => new Date(ts).toLocaleString('es', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   const level =p => p == null ? { t: 'Sin datos', c: 'var(--dim)' } : p >= 85 ? { t: 'Experto', c: 'var(--ok)' } : p >= 70 ? { t: 'Competente', c: 'color-mix(in oklab, var(--ok) 70%, var(--warn))' } : p >= 50 ? { t: 'En desarrollo', c: 'var(--warn)' } : { t: 'Inicial', c: 'var(--bad)' };
@@ -112,16 +115,27 @@
   function stopTimer() { if (timerId) { clearInterval(timerId); timerId = null; } }
 
   /* ---------- selección de preguntas ---------- */
+  const MODES = {
+    mixto: { label: 'Mixto', desc: 'Conceptuales y situacionales', test: () => true },
+    situacional: { label: 'Solo situacionales', desc: 'Casos en los que hay que decidir qué hacer', test: q => q.sit }
+  };
+  const modeOf = m => (MODES[m] ? m : 'mixto');
+  const poolFor = mode => BANK.filter(MODES[modeOf(mode)].test);
+  const maxFor = mode => Math.max(1, Math.min(MAX_Q, poolFor(mode).length));
+  const minFor = mode => Math.min(MIN_Q, maxFor(mode));
+
   // Reparte n parejo entre dimensiones (el resto va a dimensiones al azar) y, dentro de cada
   // dimensión, prefiere las preguntas que este coach vio menos veces.
-  function buildExam(name, n) {
+  function buildExam(name, n, mode) {
+    mode = modeOf(mode);
     const seen = Object.create(null);
     const ck = coachKey(name);
     history().filter(a => coachKey(a.coach) === ck).forEach(a => a.items.forEach(it => { seen[it.qid] = (seen[it.qid] || 0) + 1; }));
 
+    const source = poolFor(mode);
     const pools = {};
     DIMS.forEach(d => {
-      pools[d.id] = shuffle(BANK.filter(q => q.d === d.id)).sort((a, b) => (seen[a.id] || 0) - (seen[b.id] || 0));
+      pools[d.id] = shuffle(source.filter(q => q.d === d.id)).sort((a, b) => (seen[a.id] || 0) - (seen[b.id] || 0));
     });
     const quota = {}; DIMS.forEach(d => { quota[d.id] = 0; });
     let left = n;
@@ -139,7 +153,7 @@
     const questions = shuffle(picked).map(q => ({ qid: q.id, order: shuffle(q.o.map((_, i) => i)) }));
     const now = Date.now();
     const durationMs = questions.length * SEC_PER_Q * 1000;
-    return { id: uid(), coach: cleanName(name), startedAt: now, deadline: now + durationMs, durationMs, questions, answers: {}, flags: {}, pos: 0 };
+    return { id: uid(), coach: cleanName(name), mode, startedAt: now, deadline: now + durationMs, durationMs, questions, answers: {}, flags: {}, pos: 0 };
   }
 
   /* ---------- HOME ---------- */
@@ -151,8 +165,11 @@
 
     const cur = store.get(K.cur, null);
     const list = coaches();
-    const last = store.get(K.last, { name: '', n: 20 });
-    const counts = {}; BANK.forEach(q => { counts[q.d] = (counts[q.d] || 0) + 1; });
+    const last = store.get(K.last, { name: '', n: 20, mode: 'mixto' });
+    let mode = modeOf(last.mode);
+    const counts = {}, sitCounts = {};
+    BANK.forEach(q => { counts[q.d] = (counts[q.d] || 0) + 1; if (q.sit) sitCounts[q.d] = (sitCounts[q.d] || 0) + 1; });
+    const totalSit = BANK.filter(q => q.sit).length;
 
     app.innerHTML = `
       ${DATA.errors.length ? `<div class="banner" style="border-color:var(--bad);background:var(--bad-wash)">
@@ -176,21 +193,26 @@
             <input type="text" id="name" list="coachList" autocomplete="off" maxlength="80" placeholder="Nombre y apellido" value="${esc(last.name || '')}">
             <datalist id="coachList">${list.map(c => `<option value="${esc(c.name)}">`).join('')}</datalist>
           </label>
+          <div class="field" style="margin-bottom:18px"><span class="small muted" style="display:block;margin-bottom:6px">Tipo de preguntas</span>
+            <div class="seg" role="radiogroup" aria-label="Tipo de preguntas">
+              ${Object.entries(MODES).map(([k, m]) => `<button type="button" class="btn ${k === mode ? 'act' : ''}" data-mode="${k}" role="radio" aria-checked="${k === mode}"><b>${m.label}</b><small>${m.desc} · ${poolFor(k).length} preg.</small></button>`).join('')}
+            </div>
+          </div>
           <label class="field"><span>Cantidad de preguntas</span>
-            <div class="range-row"><span class="big mono" id="nOut">${last.n || 20}</span><span class="muted small" id="tOut"></span></div>
-            <input type="range" id="n" min="${MIN_Q}" max="${MAX_Q}" step="1" value="${last.n || 20}">
-            <div class="range-row small muted"><span>${MIN_Q}</span><span>${MAX_Q}</span></div>
+            <div class="range-row"><span class="big mono" id="nOut"></span><span class="muted small" id="tOut"></span></div>
+            <input type="range" id="n" step="1">
+            <div class="range-row small muted"><span id="nMin"></span><span id="nMax"></span></div>
           </label>
-          <div class="small muted" style="margin-bottom:18px">2 minutos por pregunta, sobre el total del examen: el tiempo se administra libremente entre preguntas. Al agotarse, el examen se entrega automáticamente.</div>
+          <div class="small muted" style="margin-bottom:18px">${fmtPerQ(SEC_PER_Q)} por pregunta, sobre el total del examen: el tiempo se administra libremente entre preguntas. Al agotarse, el examen se entrega automáticamente.</div>
           <button class="btn primary" id="start" style="width:100%">Comenzar examen</button>
           <div class="hint" id="startHint"></div>
         </div>
         <div class="card">
           <h2>Dimensiones evaluadas</h2>
           <ul class="dimlist">
-            ${DIMS.map(d => `<li><span>${esc(d.name)}${d.kind === 'Recomendable' ? ' <span class="chip">recomendable</span>' : ''}</span><span class="mono muted small">${counts[d.id] || 0} preg.</span></li>`).join('')}
+            ${DIMS.map(d => `<li><span>${esc(d.name)}${d.kind === 'Recomendable' ? ' <span class="chip">recomendable</span>' : ''}</span><span class="mono muted small" title="Total de preguntas · situacionales">${counts[d.id] || 0} · ${sitCounts[d.id] || 0} sit.</span></li>`).join('')}
           </ul>
-          <div class="small muted" style="margin-top:12px">Preguntas de respuesta única y múltiple. En las múltiples se indica cuántas opciones elegir y se puntúan completas: correcta sólo si se marcan exactamente las opciones correctas. Aprobación: ${PASS}%.</div>
+          <div class="small muted" style="margin-top:12px">${BANK.length} preguntas, ${totalSit} de ellas situacionales: plantean un caso y piden decidir qué hacer. Preguntas de respuesta única y múltiple. En las múltiples se indica cuántas opciones elegir y se puntúan completas: correcta sólo si se marcan exactamente las opciones correctas. Aprobación: ${PASS}%.</div>
         </div>
       </div>
       ${list.length ? `<div class="card" style="margin-top:16px"><div class="row"><h2 style="margin:0">Últimos coaches evaluados</h2><div class="spacer"></div><button class="btn sm ghost" id="allHist">Ver historial completo</button></div>
@@ -198,8 +220,20 @@
     `;
 
     const nEl = document.getElementById('n'), nOut = document.getElementById('nOut'), tOut = document.getElementById('tOut');
-    const upd = () => { nOut.textContent = nEl.value; tOut.textContent = 'Tiempo total: ' + (nEl.value * SEC_PER_Q / 60) + ' minutos'; };
-    nEl.oninput = upd; upd();
+    const upd = () => { nOut.textContent = nEl.value; tOut.textContent = 'Tiempo total: ' + Math.round(nEl.value * SEC_PER_Q / 60) + ' minutos'; };
+    // El máximo del slider depende de cuántas preguntas tiene el tipo elegido.
+    const applyMode = (wanted) => {
+      const lo = minFor(mode), hi = maxFor(mode);
+      nEl.min = lo; nEl.max = hi;
+      nEl.value = Math.min(hi, Math.max(lo, +wanted || 20));
+      document.getElementById('nMin').textContent = lo;
+      document.getElementById('nMax').textContent = hi;
+      app.querySelectorAll('.seg .btn').forEach(b => { const on = b.dataset.mode === mode; b.classList.toggle('act', on); b.setAttribute('aria-checked', on); });
+      upd();
+    };
+    app.querySelectorAll('.seg .btn').forEach(b => { b.onclick = () => { mode = b.dataset.mode; applyMode(nEl.value); }; });
+    nEl.oninput = upd;
+    applyMode(last.n);
     const nameEl = document.getElementById('name');
     if (!cur) nameEl.focus();
     nameEl.onkeydown = e => { if (e.key === 'Enter') document.getElementById('start').click(); };
@@ -212,9 +246,9 @@
           [{ label: 'Cancelar', value: false, cls: 'ghost' }, { label: 'Descartar y comenzar', value: true, cls: 'primary' }]);
         if (!ok) return;
       }
-      const n = Math.min(MAX_Q, Math.max(MIN_Q, +nEl.value));
-      store.set(K.last, { name, n });
-      exam = buildExam(name, n);
+      const n = Math.min(maxFor(mode), Math.max(minFor(mode), +nEl.value));
+      store.set(K.last, { name, n, mode });
+      exam = buildExam(name, n, mode);
       store.set(K.cur, exam);
       renderExam();
     };
@@ -355,7 +389,7 @@
       id: exam.id, coach: exam.coach, date: Date.now(), startedAt: exam.startedAt,
       durationMs: exam.durationMs, usedMs: Math.max(0, now - exam.startedAt),
       total: items.length, correct, pct: items.length ? Math.round(correct / items.length * 100) : 0,
-      byDim, items, timedOut: !!timedOut
+      byDim, items, timedOut: !!timedOut, mode: modeOf(exam.mode)
     };
     const h = history();
     if (!h.some(a => a.id === attempt.id)) h.push(attempt);
@@ -440,7 +474,7 @@
     app.innerHTML = `
       ${opts.fresh && a.timedOut ? '<div class="banner"><b>Tiempo agotado.</b>&nbsp;El examen se entregó automáticamente con las respuestas registradas.</div>' : ''}
       ${opts.fresh && opts.saved === false ? '<div class="banner"><b>Atención:</b>&nbsp;no se pudo guardar en el almacenamiento local del navegador. Imprime o anota el resultado.</div>' : ''}
-      <div class="eyebrow">Resultado · ${esc(fmtDate(a.date))}</div>
+      <div class="eyebrow">Resultado · ${esc(fmtDate(a.date))} · ${esc(modeLabel(a.mode))}</div>
       <h1>${esc(a.coach)}</h1>
       <div class="card">
         <div class="score">
@@ -504,7 +538,7 @@
         return `<li class="${cls}"><span class="m">${mark}</span><span><b class="mono">${LETTERS[k]}.</b> ${esc(q.o[oi])}</span>${tag ? `<span class="tag">${tag}</span>` : ''}</li>`;
       }).join('');
       return `<div class="rev ${it.ok ? 'ok' : 'bad'}">
-        <div class="row"><span class="mono small muted">#${n + 1}</span><span class="chip ${it.ok ? 'ok' : 'bad'}">${it.ok ? 'Correcta' : it.sel.length ? 'Incorrecta' : 'Sin responder'}</span><span class="chip">${esc(DIM[q.d].short)}</span>${multi ? `<span class="chip">Múltiple · ${q.a.length}</span>` : ''}</div>
+        <div class="row"><span class="mono small muted">#${n + 1}</span><span class="chip ${it.ok ? 'ok' : 'bad'}">${it.ok ? 'Correcta' : it.sel.length ? 'Incorrecta' : 'Sin responder'}</span><span class="chip">${esc(DIM[q.d].short)}</span>${q.sit ? '<span class="chip acc">Situacional</span>' : ''}${multi ? `<span class="chip">Múltiple · ${q.a.length}</span>` : ''}</div>
         <div class="q">${esc(q.q)}</div>
         <ul>${opts}</ul>
         <div class="expl"><b>Explicación.</b> ${esc(q.e)}</div>
@@ -548,9 +582,9 @@
           <div class="card"><h2>Perfil acumulado</h2>${radar ? `<div class="chart-wrap">${radar}</div>` : '<div class="empty">Datos insuficientes.</div>'}</div>
         </div>
         <div class="card"><h2>Intentos</h2><div class="tscroll"><table>
-          <thead><tr><th>#</th><th>Fecha</th><th>Preguntas</th><th>Puntaje</th><th>Tiempo</th><th>Estado</th><th></th></tr></thead>
+          <thead><tr><th>#</th><th>Fecha</th><th>Tipo</th><th>Preguntas</th><th>Puntaje</th><th>Tiempo</th><th>Estado</th><th></th></tr></thead>
           <tbody>${at.map((a, k) => `<tr>
-            <td class="mono">${k + 1}</td><td>${esc(fmtDate(a.date))}</td><td class="mono">${a.correct}/${a.total}</td>
+            <td class="mono">${k + 1}</td><td>${esc(fmtDate(a.date))}</td><td class="small">${esc(modeLabel(a.mode))}</td><td class="mono">${a.correct}/${a.total}</td>
             <td class="mono" style="color:${level(a.pct).c}"><b>${a.pct}%</b></td><td class="mono small">${fmtDur(a.usedMs)}${a.timedOut ? ' ⏱' : ''}</td>
             <td><span class="verdict ${a.pct >= PASS ? 'pass' : 'fail'}" style="font-size:10px;padding:3px 6px">${a.pct >= PASS ? 'Aprobado' : 'No aprobado'}</span></td>
             <td style="white-space:nowrap"><button class="btn sm" data-view="${esc(a.id)}">Ver detalle</button> <button class="btn sm danger ghost" data-del="${esc(a.id)}" title="Eliminar intento">✕</button></td></tr>`).join('')}</tbody>
@@ -570,7 +604,7 @@
 
     app.querySelectorAll('.coachcard').forEach(b => { b.onclick = () => renderHistory(b.dataset.k); });
     const nf = document.getElementById('newFor');
-    if (nf) nf.onclick = () => { store.set(K.last, { name: sel.name, n: (store.get(K.last, {}).n) || 20 }); renderHome(); };
+    if (nf) nf.onclick = () => { const l = store.get(K.last, {}); store.set(K.last, { name: sel.name, n: l.n || 20, mode: modeOf(l.mode) }); renderHome(); };
     app.querySelectorAll('[data-view]').forEach(b => { b.onclick = () => { const a = history().find(x => x.id === b.dataset.view); if (a) { reviewFilter = { kind: 'all', dim: 'all' }; renderResults(a); } }; });
     app.querySelectorAll('[data-del]').forEach(b => {
       b.onclick = async () => {
