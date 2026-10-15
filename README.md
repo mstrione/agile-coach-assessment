@@ -55,3 +55,7 @@ Todo se edita en `data/preguntas.js`. Después de `window.ASSESSMENT_DATA =` hay
 - `dimensiones` define las dimensiones (`id`, `nombre`, `corto` para el gráfico, `tipo`).
 
 Al cargar, la app valida el banco: si una pregunta tiene errores la descarta y lo avisa en la pantalla de inicio.
+
+## Publicar cambios
+
+Cada `git push` a `main` vuelve a publicar en GitHub Pages. Al modificar `css/`, `js/` o `data/`, subir el número `?v=` de las rutas en `index.html` para que los navegadores no usen la versión en caché.
