@@ -104,7 +104,7 @@ window.ASSESSMENT_DATA = {
       "dimension": "fw",
       "tipo": "unica",
       "situacional": true,
-      "pregunta": "A mitad del Sprint, el Product Owner pide incorporar un ítem urgente que pondría en riesgo el Sprint Goal. ¿Qué es lo más coherente con la Guía Scrum?",
+      "pregunta": "A mitad del Sprint, el Product Owner pide incorporar una funcionalidad nueva (no es un incidente productivo) que, por su tamaño, haría imposible cumplir el Sprint Goal. ¿Qué es lo más coherente con la Guía Scrum?",
       "opciones": [
         "El PO lo agrega directamente, ya que es quien ordena el Sprint Backlog y responde por el valor",
         "No se hacen cambios que pongan en riesgo el Sprint Goal; si el objetivo quedó obsoleto, el PO puede cancelar el Sprint",
@@ -114,7 +114,7 @@ window.ASSESSMENT_DATA = {
       "correctas": [
         "B"
       ],
-      "explicacion": "Durante el Sprint no se hacen cambios que pongan en peligro el Sprint Goal; el alcance puede renegociarse con el PO a medida que se aprende. El Sprint Backlog pertenece a los Developers, la duración del Sprint no se extiende y sólo el PO puede cancelar un Sprint."
+      "explicacion": "Durante el Sprint no se hacen cambios que pongan en peligro el Sprint Goal; el alcance puede renegociarse con el PO a medida que se aprende. El Sprint Backlog pertenece a los Developers, la duración del Sprint no se extiende y sólo el PO puede cancelar un Sprint. Distinto es un incidente crítico en producción, que el playbook indica atender de inmediato intercambiándolo por un PBI en curso."
     },
     {
       "id": "FW03",
@@ -402,7 +402,7 @@ window.ASSESSMENT_DATA = {
       "dimension": "fw",
       "tipo": "unica",
       "situacional": false,
-      "pregunta": "Con sprints de 2 semanas, ¿qué time-box define el modelo operativo para Sprint Planning, Sprint Review y Retrospectiva, respectivamente?",
+      "pregunta": "Con sprints de 2 semanas, ¿qué time-box define el modelo operativo para la Sprint Planning, la Sprint Review y la Retrospectiva de cada squad, respectivamente?",
       "opciones": [
         "2 h, 1 h y 1 h",
         "4 h, 2 h y 1,5 h",
@@ -412,7 +412,7 @@ window.ASSESSMENT_DATA = {
       "correctas": [
         "B"
       ],
-      "explicacion": "Para sprints de 2 semanas: Sprint Planning de máximo 4 h, Sprint Review de máximo 2 h, Retrospectiva de máximo 1,5 h y Daily de 15 min. Son proporcionales a los máximos de la Guía Scrum para sprints de un mes (8 h, 4 h y 3 h)."
+      "explicacion": "Para sprints de 2 semanas, a nivel de squad: Sprint Planning de máximo 4 h, Sprint Review de máximo 2 h, Retrospectiva de máximo 1,5 h y Daily de 15 min. Son proporcionales a los máximos de la Guía Scrum para sprints de un mes (8 h, 4 h y 3 h). La Sprint Review conjunta de la tribu es otro foro, de unas 3 h."
     },
     {
       "id": "FW20",
@@ -590,24 +590,24 @@ window.ASSESSMENT_DATA = {
       "dimension": "okr",
       "tipo": "unica",
       "situacional": true,
-      "pregunta": "Un área define 12 objetivos con 8 KRs cada uno para el trimestre. ¿Cuál es el principal riesgo y la recomendación?",
+      "pregunta": "Un área define 12 objetivos con 8 KRs cada uno para el año. ¿Cuál es el principal riesgo y la recomendación?",
       "opciones": [
         "Desalineamiento; conviene cascadear cada objetivo a los equipos para asegurar que todos estén cubiertos",
-        "Pérdida de foco; conviene priorizar entre 3 y 5 objetivos con 3 a 5 KRs cada uno",
+        "Pérdida de foco; conviene priorizar entre 3 y 5 objetivos con pocos KRs cada uno",
         "Metas poco ambiciosas; conviene marcar la mitad de los objetivos como aspiracionales",
         "Sobrecarga de seguimiento; conviene pasar los check-ins de semanales a mensuales"
       ],
       "correctas": [
         "B"
       ],
-      "explicacion": "Los OKRs son una herramienta de foco. Doerr y Grove recomiendan pocos objetivos (3–5) con pocos KRs (hasta 5). Muchos objetivos diluyen la atención y terminan siendo una lista de trabajo."
+      "explicacion": "El playbook recomienda un set de 3 a 5 objetivos (\"menos es más\"): los OKRs son una herramienta de foco. Muchos objetivos diluyen la atención y terminan siendo una lista de trabajo."
     },
     {
       "id": "OK04",
       "dimension": "okr",
       "tipo": "unica",
       "situacional": true,
-      "pregunta": "La dirección quiere atar el bono anual al porcentaje de cumplimiento de los OKRs de cada persona. Según las prácticas recomendadas por Doerr y Google, ¿qué conviene?",
+      "pregunta": "La dirección quiere atar el bono anual al porcentaje de cumplimiento de los OKRs de cada persona. Según los principios del modelo y las recomendaciones de Doerr, ¿qué conviene?",
       "opciones": [
         "Atarlo sólo a los OKRs comprometidos y dejar los aspiracionales fuera de la compensación",
         "Desacoplar los OKRs de la compensación, porque atarlos incentiva metas conservadoras",
@@ -617,7 +617,7 @@ window.ASSESSMENT_DATA = {
       "correctas": [
         "B"
       ],
-      "explicacion": "La recomendación de Doerr y Google es separar los OKRs de la evaluación y la compensación. Cualquier vínculo, aunque sea parcial o grupal, empuja a proponer metas fáciles (sandbagging) y erosiona el valor aspiracional."
+      "explicacion": "Uno de los seis principios del modelo es que los OKRs no miden directamente el rendimiento individual ni se usan para evaluarlo, en línea con Doerr y Google. Atarlos a la compensación, aunque sea de forma parcial o grupal, empuja a proponer metas fáciles (sandbagging) y erosiona la ambición."
     },
     {
       "id": "OK05",
@@ -778,7 +778,7 @@ window.ASSESSMENT_DATA = {
       "dimension": "okr",
       "tipo": "unica",
       "situacional": true,
-      "pregunta": "Un equipo cumple siempre el 100% de sus OKRs aspiracionales, trimestre tras trimestre. ¿Qué suele indicar?",
+      "pregunta": "Un squad cumple siempre el 100% de sus KRs, trimestre tras trimestre. Según los principios de OKRs del modelo, ¿qué suele indicar?",
       "opciones": [
         "Que es un equipo de alto desempeño y conviene replicar su forma de trabajo en otros equipos",
         "Que probablemente sus metas son poco ambiciosas (sandbagging)",
@@ -1104,7 +1104,7 @@ window.ASSESSMENT_DATA = {
       "dimension": "tools",
       "tipo": "unica",
       "situacional": true,
-      "pregunta": "El burndown de un equipo queda plano durante 8 de los 10 días del sprint y cae bruscamente al final. ¿Qué patrón sugiere con más probabilidad?",
+      "pregunta": "El burndown de un squad queda plano durante 8 de los 10 días del sprint y en los dos últimos días cae hasta cero. ¿Qué patrón sugiere?",
       "opciones": [
         "Que el equipo sobrecomprometió el sprint y debería reducir la capacidad planificada",
         "Ítems demasiado grandes o una \"mini cascada\": el trabajo se cierra recién al final",
@@ -1114,7 +1114,7 @@ window.ASSESSMENT_DATA = {
       "correctas": [
         "B"
       ],
-      "explicacion": "Una curva plana seguida de una caída abrupta indica que poco trabajo se termina hasta el final, típicamente por historias grandes, testing al final o mucho WIP. Conviene trocear y limitar el WIP."
+      "explicacion": "Si el trabajo restante llega a cero, el squad terminó lo comprometido, así que no hubo sobrecompromiso. Una curva plana seguida de una caída abrupta indica que casi nada se termina hasta el final, típicamente por historias grandes, testing al final o mucho WIP. Conviene trocear (INVEST, slicing) y limitar el WIP."
     },
     {
       "id": "TL10",
@@ -1132,14 +1132,14 @@ window.ASSESSMENT_DATA = {
         "A",
         "B"
       ],
-      "explicacion": "Una wiki sirve para el conocimiento compartido: decisiones, acuerdos, actas y documentación viva. El flujo de ítems y el backlog se gestionan en herramientas como Jira o Azure Boards."
+      "explicacion": "Una wiki sirve para el conocimiento compartido: decisiones, acuerdos, actas y documentación viva (el playbook menciona Confluence para las wikis de chapter y la Wiki de Azure DevOps para los documentos transversales). El flujo de ítems y el backlog se gestionan en Azure Boards."
     },
     {
       "id": "TL11",
       "dimension": "tools",
       "tipo": "unica",
       "situacional": true,
-      "pregunta": "El backlog de Jira de un equipo tiene más de 300 ítems y la mayoría lleva más de un año sin cambios. ¿Qué recomendarías?",
+      "pregunta": "El backlog en Azure Boards de un squad tiene más de 300 ítems y la mayoría lleva más de un año sin cambios. ¿Qué recomendarías?",
       "opciones": [
         "Refinarlos y estimarlos todos para obtener una proyección completa del producto",
         "Depurar o archivar lo que no aporta y mantener un backlog emergente y manejable",
@@ -1309,17 +1309,17 @@ window.ASSESSMENT_DATA = {
       "dimension": "tools",
       "tipo": "unica",
       "situacional": true,
-      "pregunta": "En el tablero del squad, la columna \"QA ready\" acumula nueve PBIs mientras \"In Progress\" tiene dos. ¿Qué indica y qué conviene hacer?",
+      "pregunta": "En el tablero del squad en Azure Boards, el estado \"Dev ready\" (desarrollo terminado, listo para QA) acumula nueve PBIs, mientras \"In Progress\" tiene dos. ¿Qué indica y qué conviene hacer?",
       "opciones": [
         "Que desarrollo trabaja rápido y conviene tomar más ítems nuevos del backlog",
         "Un cuello de botella en QA: dejar de empezar y ayudar a terminar",
         "Que QA tiene capacidad ociosa y puede tomar tareas de otros squads de la tribu",
-        "Que falta una columna intermedia para separar mejor los ítems del flujo de trabajo"
+        "Que falta un estado intermedio para separar mejor los ítems del flujo de trabajo"
       ],
       "correctas": [
         "B"
       ],
-      "explicacion": "Ítems acumulados antes de una etapa revelan un cuello de botella. Gestionar el flujo implica limitar el WIP y que el equipo ayude a terminar (swarming, automatización de pruebas) en lugar de seguir empezando trabajo nuevo."
+      "explicacion": "En el workflow de Azure Boards del playbook, \"Dev ready\" significa desarrollo terminado y en espera de QA (\"QA ready\", en cambio, es QA terminado y en espera de UAT). Ítems acumulados en una espera revelan un cuello de botella en la etapa siguiente: conviene limitar el WIP y ayudar a terminar (swarming, automatización de pruebas) en lugar de seguir empezando trabajo nuevo."
     },
     {
       "id": "TL22",
@@ -1343,7 +1343,7 @@ window.ASSESSMENT_DATA = {
       "dimension": "tools",
       "tipo": "unica",
       "situacional": true,
-      "pregunta": "El burndown del sprint en Azure muestra que el trabajo restante sube a mitad del sprint. ¿Cuál es la causa más probable?",
+      "pregunta": "El burndown del sprint en Azure muestra que el trabajo restante sube a mitad del sprint. ¿Qué indica?",
       "opciones": [
         "Que el squad terminó historias antes de lo previsto y re-estimó las restantes",
         "Que entró trabajo nuevo o se re-estimó al alza",
@@ -1433,17 +1433,17 @@ window.ASSESSMENT_DATA = {
       "dimension": "met",
       "tipo": "unica",
       "situacional": true,
-      "pregunta": "Los cycle times de un equipo tienen una distribución con cola larga a la derecha. ¿Qué conviene usar para comunicar expectativas de entrega?",
+      "pregunta": "Los últimos 40 PBIs terminados por un squad tardaron, desde que se empezaron: promedio 6 días, mediana 4 días, el 85% terminó en 11 días o menos y el más lento, 30 días. Un stakeholder pregunta cuánto tardará el próximo ítem que el squad empiece. ¿Qué respuesta comunica mejor la expectativa?",
       "opciones": [
-        "El promedio, porque considera todos los ítems terminados",
-        "Un percentil alto: \"el 85% se termina en 10 días o menos\"",
-        "La mediana, porque es robusta frente a los valores atípicos",
-        "El promedio más una desviación estándar, como margen de seguridad"
+        "Unos 6 días, que es el promedio histórico del squad",
+        "11 días o menos, con un 85% de probabilidad según el historial",
+        "Unos 4 días, porque la mediana no se ve afectada por los casos extremos",
+        "Hasta 30 días, para cubrir el peor caso observado"
       ],
       "correctas": [
         "B"
       ],
-      "explicacion": "Los cycle times rara vez siguen una distribución normal; el promedio y la desviación estándar engañan. La mediana sólo da un 50% de confianza. Un percentil alto comunica probabilidad y es la base de las SLE."
+      "explicacion": "Con una distribución sesgada (pocos ítems muy largos), la mediana se cumple sólo la mitad de las veces y el promedio apenas algo más: comprometer esos valores genera incumplimientos frecuentes. El peor caso es excesivamente conservador. Un percentil alto del historial (aquí, 11 días al 85%) comunica la expectativa junto con su probabilidad. Este enfoque viene de las métricas de flujo de Kanban; el Lead Time promedio que usa el playbook sirve para seguir tendencias, no para comprometer plazos."
     },
     {
       "id": "ME04",
@@ -1484,17 +1484,17 @@ window.ASSESSMENT_DATA = {
       "dimension": "met",
       "tipo": "unica",
       "situacional": true,
-      "pregunta": "La dirección fija como meta \"duplicar la velocidad del equipo este semestre\". ¿Qué es lo más probable que ocurra?",
+      "pregunta": "La dirección fija como meta \"duplicar la velocidad del squad este semestre\". ¿Qué le recomiendas?",
       "opciones": [
-        "Que el equipo encuentre formas de entregar el doble de valor",
-        "Que los story points se inflen sin cambio real en lo entregado",
-        "Que el equipo reduzca su WIP para enfocarse en terminar",
-        "Que mejore la previsibilidad de las entregas del equipo"
+        "Aceptar la meta y seguirla sprint a sprint en la Sincronización de Tribu",
+        "Explicar que los puntos son relativos y se inflan, y proponer metas de resultado y de flujo",
+        "Aceptarla sólo si la velocidad se convierte a horas para que sea objetiva",
+        "Aceptarla y compensar el esfuerzo flexibilizando la Definition of Done"
       ],
       "correctas": [
         "B"
       ],
-      "explicacion": "Ley de Goodhart: \"cuando una medida se convierte en objetivo, deja de ser una buena medida\". La velocidad es fácil de mover cambiando las estimaciones, sin que cambie el valor entregado."
+      "explicacion": "Ley de Goodhart: cuando una medida se convierte en objetivo, deja de ser una buena medida. En el modelo, los puntos son estimaciones relativas a una historia pivote y la velocidad sirve para la previsibilidad del squad: se pueden duplicar inflando estimaciones sin entregar más valor. Las metas deben expresarse como resultados (KRs) o indicadores de flujo."
     },
     {
       "id": "ME07",
@@ -1557,17 +1557,17 @@ window.ASSESSMENT_DATA = {
       "dimension": "met",
       "tipo": "unica",
       "situacional": false,
-      "pregunta": "¿Cuál es la diferencia más habitual entre lead time y cycle time?",
+      "pregunta": "Un PBI pasó a \"Priorizado\" el 1 de marzo, se empezó a trabajar el 4, quedó terminado el 11 y se liberó a producción el 18. Según las definiciones del marco de indicadores del modelo, ¿cuál fue su Release Lead Time?",
       "opciones": [
-        "Son equivalentes; el término cambia según el framework",
-        "El lead time va del pedido a la entrega al cliente; el cycle time, del inicio del trabajo a su fin",
-        "El lead time va del commit a producción; el cycle time, del inicio del trabajo al commit",
-        "El cycle time incluye el tiempo en el backlog; el lead time, sólo el desarrollo"
+        "14 días (del 4 al 18 de marzo)",
+        "17 días (del 1 al 18 de marzo)",
+        "10 días (del 1 al 11 de marzo)",
+        "7 días (del 4 al 11 de marzo)"
       ],
       "correctas": [
-        "B"
+        "A"
       ],
-      "explicacion": "El lead time refleja la experiencia del cliente (cuánto espera desde que pide); el cycle time, el sistema de entrega del equipo. \"Del commit a producción\" es el lead time for changes de DORA, una medida distinta."
+      "explicacion": "El playbook define el Release Lead Time como el tiempo desde que un PBI se comienza a trabajar hasta que se libera a producción: del 4 al 18 de marzo, 14 días. Los 10 días (de \"Priorizado\" a \"Terminado\") corresponden al ejemplo de Lead Time del playbook, que mide el paso entre dos estados cualesquiera; los 7 días son sólo el tiempo de trabajo hasta terminarlo."
     },
     {
       "id": "ME11",
@@ -1745,17 +1745,17 @@ window.ASSESSMENT_DATA = {
       "dimension": "met",
       "tipo": "unica",
       "situacional": true,
-      "pregunta": "Un squad muestra 100% de Cumplimiento de Sprint durante ocho sprints consecutivos. ¿Cómo lo interpretas?",
+      "pregunta": "Un squad muestra 100% de Cumplimiento de Sprint durante ocho sprints consecutivos. ¿Qué haces como Agile Coach?",
       "opciones": [
-        "Que es el squad modelo de la tribu y conviene replicar su forma de trabajo",
-        "Posibles compromisos conservadores o estimaciones infladas",
-        "Que conviene aumentar un 50% los puntos comprometidos en el próximo sprint",
-        "Que el indicador ya no aporta información y conviene dejar de medirlo"
+        "Presentarlo como squad modelo en la tribu y replicar su forma de trabajo",
+        "Conversarlo con el squad y cruzarlo con otros indicadores antes de concluir",
+        "Pedir que el squad comprometa un 50% más de puntos en el próximo sprint",
+        "Dejar de medir el indicador porque ya no aporta información útil"
       ],
       "correctas": [
         "B"
       ],
-      "explicacion": "Un cumplimiento perfecto y sostenido es poco común en trabajo complejo y puede reflejar subcompromiso o inflación de estimaciones. Una métrica es una conversación, no un veredicto: se analiza junto con el squad y con otros indicadores."
+      "explicacion": "Un cumplimiento perfecto y sostenido puede reflejar un gran desempeño, pero también compromisos conservadores o estimaciones infladas. Un indicador aislado no alcanza para concluir: se mira junto con throughput, Puntos de Change y KRs, y se conversa con el squad."
     },
     {
       "id": "ME22",
@@ -1765,14 +1765,14 @@ window.ASSESSMENT_DATA = {
       "pregunta": "Un stakeholder pide una fecha exacta para 40 PBIs. El throughput histórico del squad varía entre 4 y 8 PBIs por sprint. ¿Cuál es la mejor respuesta?",
       "opciones": [
         "Comprometer una fecha usando el throughput máximo de 8 PBIs por sprint",
-        "Un rango con probabilidad: entre 5 y 10 sprints",
+        "Un rango basado en su historial: entre 5 y 10 sprints",
         "Comprometer una fecha concreta y sumar horas extra si no se llega a tiempo",
         "No dar ninguna estimación, porque en agilidad no se comprometen fechas"
       ],
       "correctas": [
         "B"
       ],
-      "explicacion": "Con 40 ítems y un throughput de 4 a 8 por sprint, el rango va de 5 a 10 sprints. Comunicar rangos con probabilidad (idealmente con Monte Carlo) es honesto y útil; usar el mejor caso genera compromisos irreales."
+      "explicacion": "Con 40 ítems y un throughput histórico de 4 a 8 por sprint, el rango va de 5 a 10 sprints (40/8 y 40/4). Comunicar un rango es honesto y útil, y se puede afinar con más datos (por ejemplo, con una simulación de Monte Carlo). Usar el mejor caso genera compromisos irreales."
     },
     {
       "id": "ME23",
@@ -2273,7 +2273,7 @@ window.ASSESSMENT_DATA = {
       "dimension": "o365",
       "tipo": "unica",
       "situacional": false,
-      "pregunta": "¿Qué herramienta del ecosistema Microsoft es más adecuada para un dashboard interactivo y actualizable de métricas de flujo, alimentado desde Jira y Excel y compartido con stakeholders?",
+      "pregunta": "¿Qué herramienta del ecosistema Microsoft es más adecuada para un dashboard interactivo y actualizable de métricas de flujo, alimentado desde Azure Boards y Excel y compartido con stakeholders?",
       "opciones": [
         "Power BI",
         "Excel con tablas y gráficos dinámicos",
@@ -3455,17 +3455,17 @@ window.ASSESSMENT_DATA = {
       "dimension": "devops",
       "tipo": "unica",
       "situacional": true,
-      "pregunta": "El mismo tipo de incidente se repitió tres veces en el trimestre, aunque cada vez se hizo un análisis posterior. ¿Qué indica con más probabilidad?",
+      "pregunta": "El mismo tipo de incidente se repitió tres veces en el trimestre, aunque después de cada uno se hizo un análisis posterior. ¿Qué revisarías primero?",
       "opciones": [
-        "Que los análisis posteriores son innecesarios para ese tipo de incidente repetitivo",
-        "Que las acciones correctivas no se priorizan ni reciben capacidad",
-        "Que el monitoreo genera demasiadas alertas y el equipo ya no las atiende",
-        "Que el squad necesita sumar más personas dedicadas a soporte productivo"
+        "Si conviene dejar de hacer análisis posteriores para ese tipo de incidente",
+        "Si las acciones correctivas se registraron en el backlog y recibieron capacidad",
+        "Si el Nivel 1 está categorizando mal la criticidad de esos incidentes",
+        "Si el squad necesita sumar personas dedicadas a soporte productivo"
       ],
       "correctas": [
         "B"
       ],
-      "explicacion": "Un postmortem sólo sirve si sus acciones se ejecutan. Registrarlas como PBIs (habilitador, deuda técnica) y asignarles capacidad es lo que evita que el incidente se repita."
+      "explicacion": "Que el incidente se repita pese a los análisis sugiere que las acciones correctivas no se ejecutaron. Un postmortem sólo sirve si sus acciones se registran como PBIs (habilitador, deuda técnica), se priorizan y reciben capacidad del squad."
     },
     {
       "id": "SC01",
@@ -3601,7 +3601,7 @@ window.ASSESSMENT_DATA = {
       "correctas": [
         "B"
       ],
-      "explicacion": "La tribu agrupa squads con misiones relacionadas y un propósito común; su composición típica es de 5 a 15 squads y de 50 a 150 FTEs, liderados por un Tribe Lead. El límite superior se relaciona con el número de Dunbar."
+      "explicacion": "La tribu agrupa squads con misiones relacionadas y un propósito común; según el playbook, su composición típica es de 5 a 15 squads y de 50 a 150 FTEs, liderados por un Tribe Lead."
     },
     {
       "id": "SC09",
